@@ -1,0 +1,5 @@
+package com.example.order.domain.security;
+
+public enum Feature {
+    ADD_ITEM, ORDER_ITEM, UPDATE_ITEM, VIEW_ORDERS, REORDER, VIEW_ALL_USERS, VIEW_SINGLE_USER, VIEW_TODAY_ORDERS, VIEW_ORDER_URGENCY
+}
