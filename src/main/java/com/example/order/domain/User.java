@@ -3,8 +3,7 @@ package com.example.order.domain;
 import com.example.order.domain.security.Feature;
 import com.example.order.domain.security.Role;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class User {
     private final String id;
@@ -12,7 +11,7 @@ public class User {
     private final String lastName;
     private final String mailAddress;
     private final String phoneNumber;
-    private List<Order> orderList;
+    private List<Item> shoppingList = new ArrayList<>();
     private final Role role;
     private final String passWord;
 
@@ -26,6 +25,20 @@ public class User {
         this.passWord = passWord;
     }
 
+    public Item addToShoppingList(Item item, int amount){
+        Item shoppingItem = new Item(item.getName(), item.getDescription(), item.getPrice(), amount);
+        shoppingList.add(shoppingItem);
+        return shoppingItem;
+
+    }
+    public Map<String, OrderedItem> convertToOrder() {
+        Map<String, OrderedItem> orderMap = new HashMap<>();
+        for (Item item : shoppingList){
+            orderMap.put(UUID.randomUUID().toString(), (new OrderedItem(item.getName(), item.getDescription(), item.getPrice(), item.getAmount())));
+        }
+        shoppingList = new ArrayList<>();
+        return orderMap;
+    }
     public boolean doesPasswordMatch(String password) {
         return this.passWord.equals(password);
     }
@@ -83,8 +96,8 @@ public class User {
         return phoneNumber;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
+    public List<Item> getShoppingList() {
+        return shoppingList;
     }
 
     public Role getRole() {

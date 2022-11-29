@@ -15,10 +15,11 @@ import java.util.Optional;
 @Repository
 public class UserRepo {
     Logger myLogger = LoggerFactory.getLogger(UserController.class);
-    private final Map<String, User> userMap =  new HashMap();
+    private final Map<String, User> userMap =  new HashMap<>();
 
     public UserRepo(){
         this.userMap.put("Admin", new User("admin", "", "admin@test.code", "", Role.ADMIN, "pwd"));
+        this.userMap.put("Casper", new User("Casper", "", "casper@test.code", "", Role.USER, "pwd"));
     }
 
     public User save(User user) throws IllegalArgumentException {
@@ -34,6 +35,12 @@ public class UserRepo {
 
     public Optional<User> getUserById(String userId) {
         return Optional.ofNullable(userMap.get(userId));
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return getAllUsers().stream()
+                .filter(user -> user.getMailAddress().equals(email))
+                .findFirst();
     }
 
     public List<User> getAllUsers() {return userMap.values().stream().toList();}

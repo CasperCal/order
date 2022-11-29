@@ -1,0 +1,61 @@
+package com.example.order.services;
+
+import com.example.order.api.dtos.ItemDto;
+import com.example.order.api.dtos.OrderDto;
+import com.example.order.domain.Order;
+import com.example.order.domain.User;
+import com.example.order.domain.repos.ItemRepo;
+import com.example.order.domain.repos.OrderRepo;
+import com.example.order.domain.repos.UserRepo;
+import com.example.order.services.mappers.ItemMapper;
+import com.example.order.services.mappers.OrderMapper;
+import com.example.order.services.mappers.UserMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.Base64;
+import java.util.NoSuchElementException;
+
+@Service
+public class OrderService {
+    private final UserRepo userRepo;
+    private final UserMapper userMapper;
+    private final ItemRepo itemRepo;
+    private final ItemMapper itemMapper;
+    private final OrderMapper orderMapper;
+    private final OrderRepo orderRepo;
+    private User user;
+
+
+    public OrderService(UserRepo userRepo, UserMapper userMapper, ItemRepo itemRepo, ItemMapper itemMapper, OrderMapper orderMapper, OrderRepo orderRepo) {
+        this.userRepo = userRepo;
+        this.userMapper = userMapper;
+        this.itemRepo = itemRepo;
+        this.itemMapper = itemMapper;
+        this.orderMapper = orderMapper;
+        this.orderRepo = orderRepo;
+    }
+
+    //still need to make controller to add items to shoppingList with item ID  + amount as path param
+    public ItemDto addToShoppingList(String authorization, String itemId, int amount) {
+        if(itemRepo.getItemById(itemId).orElseThrow(() -> new NoSuchElementException("Item not found")).getAmount() < amount)
+            throw new IllegalArgumentException("Can't add more to shopping list than current stock.");
+        itemRepo.getItemById(itemId).orElseThrow(() -> new NoSuchElementException("Item not found")).setAmountDelta(-amount);
+        return itemMapper.toDto(getUserByAuthorization(authorization).addToShoppingList(itemRepo.getItemById(itemId)
+                .orElseThrow(() -> new NoSuchElementException("Item not found")), amount));
+    }
+
+    public OrderDto order(String authorization) {
+        //here we have created list of order items with delivery date based on items in shoppingList
+        //still need to convert them to dto and store it in a repo for orders
+        Order order = new Order(getUserByAuthorization(authorization).getId(), getUserByAuthorization(authorization).convertToOrder());
+        return orderMapper.toDto(orderRepo.save(order));
+    }
+
+    private User getUserByAuthorization(String authorization){
+        String decodedToUsernameAndPassword = new String(Base64.getDecoder().decode(authorization.substring("Basic ".length())));
+        String userEmail = decodedToUsernameAndPassword.split(":")[0];
+        return userRepo.getUserByEmail(userEmail).orElseThrow(() -> new NoSuchElementException("User not found"));
+    }
+
+
+}

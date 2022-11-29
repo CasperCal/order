@@ -5,5 +5,5 @@ import com.example.order.domain.security.Role;
 
 import java.util.List;
 
-public record CreateUserDto(String firstName, String lastName, String mailAddress, String phoneNumber, List<Order> orderList, String passWord) {
+public record CreateUserDto(String firstName, String lastName, String mailAddress, String phoneNumber, String passWord) {
 }

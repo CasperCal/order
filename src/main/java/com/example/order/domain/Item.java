@@ -7,15 +7,44 @@ public class Item {
     private final String name;
     private final String description;
     private final double price;
-    private final int stockAmount;
+    private int amount;
 
-    public Item(String name, String description, double price, int stockAmount) {
-        if (stockAmount < 0 || price <= 0) {throw new IllegalArgumentException("value can't be that low.");}
+    public Item(String name, String description, double price, int amount) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
         this.price = price;
-        this.stockAmount = stockAmount;
+        this.amount = amount;
+    }
+    public void setAmountDelta(int amount) {
+        this.amount += amount;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public Item(String id, String name, String description, double price, int amount) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amount = amount;
+    }
 }
