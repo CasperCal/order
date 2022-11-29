@@ -3,6 +3,7 @@ package com.example.order.services;
 import com.example.order.api.dtos.ItemDto;
 import com.example.order.api.dtos.OrderDto;
 import com.example.order.domain.Order;
+import com.example.order.domain.OrderedItem;
 import com.example.order.domain.User;
 import com.example.order.domain.repos.ItemRepo;
 import com.example.order.domain.repos.OrderRepo;
@@ -13,6 +14,7 @@ import com.example.order.services.mappers.UserMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -36,8 +38,6 @@ public class OrderService {
     }
 
     public ItemDto addToShoppingList(String authorization, String itemId, int amount) {
-        if(itemRepo.getItemById(itemId).orElseThrow(() -> new NoSuchElementException("Item not found")).getAmount() < amount)
-            throw new IllegalArgumentException("Can't add more to shopping list than current stock.");
         itemRepo.getItemById(itemId).orElseThrow(() -> new NoSuchElementException("Item not found")).setAmountDelta(-amount);
         return itemMapper.toDto(getUserByAuthorization(authorization).addToShoppingList(itemRepo.getItemById(itemId)
                 .orElseThrow(() -> new NoSuchElementException("Item not found")), amount));
@@ -45,14 +45,28 @@ public class OrderService {
 
     public OrderDto order(String authorization) {
         Order order = new Order(getUserByAuthorization(authorization).getId(), getUserByAuthorization(authorization).convertToOrder());
+        checkStock(order.getItemGroup());
         return orderMapper.toDto(orderRepo.save(order));
     }
 
-    private User getUserByAuthorization(String authorization){
+    private void checkStock(Map<String, OrderedItem> orderMap){
+        for (OrderedItem item : orderMap.values()) {
+            if(itemRepo.getItemById(item.getId()).orElseThrow(() -> new NoSuchElementException("Item not found"))
+                    .getAmount() <= 0) {
+                item.lateShipping();
+            }
+        }
+    }
+
+    private User getUserByAuthorization(String authorization) {
         String decodedToUsernameAndPassword = new String(Base64.getDecoder().decode(authorization.substring("Basic ".length())));
         String userEmail = decodedToUsernameAndPassword.split(":")[0];
         return userRepo.getUserByEmail(userEmail).orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 
-
+    public boolean inStock(String itemId, int amount) {
+        if(itemRepo.getItemById(itemId).orElseThrow(() ->new NoSuchElementException("Item not found")).getAmount() < amount)
+            return false;
+        return true;
+    }
 }

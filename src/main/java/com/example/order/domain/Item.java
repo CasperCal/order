@@ -17,6 +17,15 @@ public class Item {
         this.price = price;
         this.amount = amount;
     }
+
+    public Item(String id, String name, String description, double price, int amount) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amount = amount;
+    }
+
     public void setAmountDelta(int amount) {
         this.amount += amount;
     }
@@ -39,14 +48,6 @@ public class Item {
 
     public int getAmount() {
         return amount;
-    }
-
-    public Item(String id, String name, String description, double price, int amount) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.amount = amount;
     }
 
     @Override

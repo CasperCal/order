@@ -6,20 +6,27 @@ import java.util.Objects;
 public class OrderedItem extends Item{
     private final static int SHIPPING_DELTA_IN_STOCK = 1;
     private final static int SHIPPING_DELTA_NOT_IN_STOCK = 7;
-    private LocalDate deliveryDate;
+    private LocalDate deliveryDate = LocalDate.now().plusDays(SHIPPING_DELTA_IN_STOCK);
+    private boolean inStock = true;
 
     public OrderedItem(String name, String description, double price, int amount) {
         super(name, description, price, amount);
-        this.deliveryDate = calculateShippingDate();
     }
 
-    private LocalDate calculateShippingDate() {
-        if (super.getAmount() == 0) {return LocalDate.now().plusDays(SHIPPING_DELTA_NOT_IN_STOCK);}
-        return LocalDate.now().plusDays(SHIPPING_DELTA_IN_STOCK);
+    public OrderedItem(String id, String name, String description, double price, int amount) {
+        super(id, name, description, price, amount);
+    }
+
+    public void lateShipping() {
+        this.deliveryDate =  LocalDate.now().plusDays(SHIPPING_DELTA_NOT_IN_STOCK);
     }
 
     public LocalDate getDeliveryDate() {
         return deliveryDate;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
     }
 
     @Override
