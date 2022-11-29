@@ -27,14 +27,20 @@ public class User {
 
     public Item addToShoppingList(Item item, int amount){
         Item shoppingItem = new Item(item.getName(), item.getDescription(), item.getPrice(), amount);
-        shoppingList.add(shoppingItem);
+        if (shoppingList.contains(shoppingItem)) {
+            shoppingList.get(shoppingList.indexOf(shoppingItem)).setAmountDelta(amount);
+            return shoppingList.get(shoppingList.indexOf(shoppingItem));
+        }
+        else
+            shoppingList.add(shoppingItem);
         return shoppingItem;
 
     }
     public Map<String, OrderedItem> convertToOrder() {
         Map<String, OrderedItem> orderMap = new HashMap<>();
         for (Item item : shoppingList){
-            orderMap.put(UUID.randomUUID().toString(), (new OrderedItem(item.getName(), item.getDescription(), item.getPrice(), item.getAmount())));
+            OrderedItem newOrder = new OrderedItem(item.getName(), item.getDescription(), item.getPrice(), item.getAmount());
+            orderMap.put(newOrder.getId(), newOrder);
         }
         shoppingList = new ArrayList<>();
         return orderMap;

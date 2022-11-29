@@ -34,7 +34,7 @@ public class OrderService {
         this.orderMapper = orderMapper;
         this.orderRepo = orderRepo;
     }
-    
+
     public ItemDto addToShoppingList(String authorization, String itemId, int amount) {
         if(itemRepo.getItemById(itemId).orElseThrow(() -> new NoSuchElementException("Item not found")).getAmount() < amount)
             throw new IllegalArgumentException("Can't add more to shopping list than current stock.");

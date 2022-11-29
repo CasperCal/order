@@ -1,6 +1,7 @@
 package com.example.order.domain;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class OrderedItem extends Item{
     private final static int SHIPPING_DELTA_IN_STOCK = 1;
@@ -19,6 +20,20 @@ public class OrderedItem extends Item{
 
     public LocalDate getDeliveryDate() {
         return deliveryDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        OrderedItem that = (OrderedItem) o;
+        return Objects.equals(deliveryDate, that.deliveryDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), deliveryDate);
     }
 }
 
