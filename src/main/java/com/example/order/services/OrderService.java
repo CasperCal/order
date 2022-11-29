@@ -34,8 +34,7 @@ public class OrderService {
         this.orderMapper = orderMapper;
         this.orderRepo = orderRepo;
     }
-
-    //still need to make controller to add items to shoppingList with item ID  + amount as path param
+    
     public ItemDto addToShoppingList(String authorization, String itemId, int amount) {
         if(itemRepo.getItemById(itemId).orElseThrow(() -> new NoSuchElementException("Item not found")).getAmount() < amount)
             throw new IllegalArgumentException("Can't add more to shopping list than current stock.");
@@ -45,8 +44,6 @@ public class OrderService {
     }
 
     public OrderDto order(String authorization) {
-        //here we have created list of order items with delivery date based on items in shoppingList
-        //still need to convert them to dto and store it in a repo for orders
         Order order = new Order(getUserByAuthorization(authorization).getId(), getUserByAuthorization(authorization).convertToOrder());
         return orderMapper.toDto(orderRepo.save(order));
     }
