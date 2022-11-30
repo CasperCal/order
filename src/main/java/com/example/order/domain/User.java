@@ -81,6 +81,16 @@ public class User {
         this.passWord = passWord;
     }
 
+    public User(String id, String firstName, String lastName, String mailAddress, String phoneNumber, Role role, String passWord) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mailAddress = mailAddress;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.passWord = passWord;
+    }
+
     public String getId() {
         return id;
     }

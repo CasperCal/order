@@ -9,6 +9,9 @@ import com.example.order.services.mappers.UserMapper;
 import com.example.order.services.regex.RegexHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 @Service
 public class UserService {
     private final UserRepo userRepo;
@@ -24,6 +27,14 @@ public class UserService {
         if (!error.isEmpty()) {throw new IllegalArgumentException("Incorrect user input in field: "+ error);}
         User user = new User(createUserDto.firstName(), createUserDto.lastName(), createUserDto.mailAddress(), createUserDto.phoneNumber(), createUserDto.passWord());
         return userMapper.toDto(userRepo.save(user));
+    }
+
+    public List<UserDto> getAllUsers() {
+        return userMapper.toDto(userRepo.getAllUsers());
+    }
+
+    public UserDto getUserById(String id) throws NoSuchElementException {
+        return userMapper.toDto(userRepo.getUserById(id).orElseThrow(() -> new NoSuchElementException("No User with ID: " + id + " found in repo.")));
     }
 
     private String validateUserInput(CreateUserDto createUserDto) {

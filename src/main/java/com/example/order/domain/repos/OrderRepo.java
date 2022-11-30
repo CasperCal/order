@@ -2,6 +2,8 @@ package com.example.order.domain.repos;
 
 import com.example.order.domain.Order;
 import com.example.order.domain.OrderedItem;
+import com.example.order.domain.User;
+import com.example.order.domain.security.Role;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -11,7 +13,8 @@ import java.util.Optional;
 
 @Repository
 public class OrderRepo {
-    private final Map<String, Order> orderMap = new HashMap<>();
+    private final Map<String, Order> orderMap = new HashMap<>(
+    );
 
     public OrderRepo() {
     }

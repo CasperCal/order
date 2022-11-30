@@ -18,8 +18,8 @@ public class UserRepo {
     private final Map<String, User> userMap =  new HashMap<>();
 
     public UserRepo(){
-        this.userMap.put("Admin", new User("admin", "", "admin@test.code", "", Role.ADMIN, "pwd"));
-        this.userMap.put("Casper", new User("Casper", "", "casper@test.code", "", Role.USER, "pwd"));
+        this.userMap.put("admin", new User("admin", "admin", "", "admin@test.code", "", Role.ADMIN, "pwd"));
+        this.userMap.put("Casper", new User("Casper","Casper", "", "casper@test.code", "", Role.USER, "pwd"));
     }
 
     public User save(User user) throws IllegalArgumentException {
