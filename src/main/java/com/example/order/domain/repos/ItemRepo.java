@@ -39,5 +39,9 @@ public class ItemRepo {
     public Optional<Item> getItemById(String itemId) {
         return Optional.ofNullable(itemMap.get(itemId));
     }
-//    public List<Item> getAllItems() {return itemMap.values().stream().toList();}
+    public Optional<Item> getItemByName(String name) {
+        return itemMap.values().stream()
+                .filter(item -> item.getName().equals(name))
+                .findFirst();
+    }
 }

@@ -59,4 +59,20 @@ public class Item {
         Item item = (Item) o;
         return Double.compare(item.price, price) == 0 && Objects.equals(name, item.name) && Objects.equals(description, item.description);
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 }

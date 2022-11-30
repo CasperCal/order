@@ -2,6 +2,7 @@ package com.example.order.services;
 
 import com.example.order.api.dtos.CreateItemDto;
 import com.example.order.api.dtos.ItemDto;
+import com.example.order.api.dtos.UpdateItemDto;
 import com.example.order.domain.Item;
 import com.example.order.domain.repos.ItemRepo;
 import com.example.order.services.mappers.ItemMapper;
@@ -31,5 +32,30 @@ public class ItemService {
         if (createItemDto.name().isEmpty()) {errorMessage += " name |";}
         if (createItemDto.description().isEmpty()) {errorMessage += " description |";}
         return errorMessage;
+    }
+
+    public ItemDto updateItem(UpdateItemDto updateItemDto, Item item) {
+
+        if (!updateItemDto.name().isEmpty()) {
+            item.setName(updateItemDto.name());
+        }
+        if (!updateItemDto.description().isEmpty()) {
+            item.setDescription(updateItemDto.description());
+        }
+        if (updateItemDto.price() > 0) {
+            item.setPrice(updateItemDto.price());
+        } else {throw new IllegalArgumentException("price can't be below zero.");}
+        item.setAmount(updateItemDto.amount());
+        return itemMapper.toDto(item);
+    }
+
+    public ItemDto updateItemByName(UpdateItemDto updateItemDto, String name){
+        Item item = itemRepo.getItemByName(name).orElseThrow(() -> new IllegalArgumentException("No item with name: " + name));;
+        return updateItem(updateItemDto, item);
+    }
+
+    public ItemDto updateItemById(UpdateItemDto updateItemDto, String id) {
+        Item item = itemRepo.getItemById(id).orElseThrow(() -> new IllegalArgumentException("No item with id: " + id));
+        return updateItem(updateItemDto, item);
     }
 }
