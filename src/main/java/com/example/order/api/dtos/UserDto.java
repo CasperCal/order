@@ -15,9 +15,4 @@ public record UserDto(String id, String firstName, String LastName, String mailA
         UserDto userDto = (UserDto) o;
         return Objects.equals(firstName, userDto.firstName) && Objects.equals(LastName, userDto.LastName) && Objects.equals(mailAddress, userDto.mailAddress) && Objects.equals(phoneNumber, userDto.phoneNumber) && role == userDto.role;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, LastName, mailAddress, phoneNumber, role);
-    }
 }

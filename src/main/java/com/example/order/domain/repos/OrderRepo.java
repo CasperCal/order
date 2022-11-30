@@ -24,9 +24,9 @@ public class OrderRepo {
         return order;
     }
 
-    public Optional<Order> getOrderById(String id) {
-        return Optional.ofNullable(orderMap.get(id));
-    }
-
-    public List<Order> getAllOrders() { return orderMap.values().stream().toList();}
+//    public Optional<Order> getOrderById(String id) {
+//        return Optional.ofNullable(orderMap.get(id));
+//    }
+//
+//    public List<Order> getAllOrders() { return orderMap.values().stream().toList();}
 }

@@ -14,15 +14,4 @@ public class OrderMapper {
     public OrderDto toDto(Order order) {
         return new OrderDto(order.getOrderId(), order.getCustomerId(), order.getItemGroup(), order.getPrice());
     }
-    public List<OrderDto> toDto(List<Order> allItems){
-        return allItems.stream()
-                .map(this::toDto)
-                .toList();
-    }
-
-    public List<OrderDto> toDto(Map<String, Order> allItems){
-        return allItems.values().stream()
-                .map(this::toDto)
-                .toList();
-    }
 }

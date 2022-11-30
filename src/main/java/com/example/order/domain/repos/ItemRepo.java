@@ -39,5 +39,5 @@ public class ItemRepo {
     public Optional<Item> getItemById(String itemId) {
         return Optional.ofNullable(itemMap.get(itemId));
     }
-    public List<Item> getAllItems() {return itemMap.values().stream().toList();}
+//    public List<Item> getAllItems() {return itemMap.values().stream().toList();}
 }

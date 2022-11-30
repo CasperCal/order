@@ -59,6 +59,25 @@ public class OrderControllerTest {
             assertEquals(itemMapper.toDto(userRepo.getUserByEmail("casper@test.code").orElseThrow(UnknownUserException::new).getShoppingList())
                         , resultAsList);
         }
+        @Test
+        void givenAuthUser_AddingItemToShoppingListOneItemTwice_thenItemIsInList(){
+            RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .log().all().contentType("application/json")
+                    .with().queryParam("itemId","1")
+                    .queryParam("amount", 1)
+                    .when().post("/orders/add")
+                    .then().statusCode(201);
+            ItemDto result = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .log().all().contentType("application/json")
+                    .with().queryParam("itemId","1")
+                    .queryParam("amount", 1)
+                    .when().post("/orders/add")
+                    .then().statusCode(201).and().extract().body().as(ItemDto.class);
+            List<ItemDto> resultAsList = new ArrayList<>();
+            resultAsList.add(result);
+            assertEquals(itemMapper.toDto(userRepo.getUserByEmail("casper@test.code").orElseThrow(UnknownUserException::new).getShoppingList())
+                    , resultAsList);
+        }
     }
 
     @DisplayName("test regarding checking out shoppingList to Order")
@@ -86,7 +105,7 @@ public class OrderControllerTest {
                     .with().queryParam("itemId", "2")
                     .queryParam("amount", 100)
                     .when().post("/orders/add")
-                    .then().statusCode(201).and().extract().body().as(ItemDto.class);
+                    .then().statusCode(201);
             OrderDto result = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
                     .log().all().contentType("application/json")
                     .when().post("/orders/checkout")
@@ -96,6 +115,27 @@ public class OrderControllerTest {
             expectedOrderItem.setDeliveryDate(LocalDate.now().plusDays(7));
             expectedOrderMap.put("2", expectedOrderItem);
             assertEquals(new OrderDto(result.id(), "Casper", expectedOrderMap, 1200),
+                    result);
+        }
+        @Test
+        void givenAuthUserWithShoppingListWithSingleItemAddedTwice_whenCheckout_ListConvertedToOrders() {
+            RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .with().queryParam("itemId", "1")
+                    .queryParam("amount", 1)
+                    .when().post("/orders/add")
+                    .then().statusCode(201);
+            RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .with().queryParam("itemId", "1")
+                    .queryParam("amount", 1)
+                    .when().post("/orders/add")
+                    .then().statusCode(201);
+            OrderDto result = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .log().all().contentType("application/json")
+                    .when().post("/orders/checkout")
+                    .then().statusCode(201).and().extract().body().as(OrderDto.class);
+            Map<String, OrderedItem> expectedOrderMap = new HashMap<>();
+            expectedOrderMap.put("1", new OrderedItem("testItem1", "an item for tests", 0.5, 2));
+            assertEquals(new OrderDto(result.id(), "Casper", expectedOrderMap, 1),
                     result);
         }
     }

@@ -39,12 +39,5 @@ public class OrderedItem extends Item{
         OrderedItem that = (OrderedItem) o;
         return Objects.equals(deliveryDate, that.deliveryDate);
     }
-
-    @Override
-    public String toString() {
-        return "OrderedItem{" +
-                "deliveryDate=" + deliveryDate +
-                '}';
-    }
 }
 

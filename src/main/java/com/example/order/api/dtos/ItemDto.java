@@ -10,9 +10,4 @@ public record ItemDto(String id, String name, String description, double price, 
         ItemDto itemDto = (ItemDto) o;
         return Double.compare(itemDto.price, price) == 0 && amount == itemDto.amount && Objects.equals(name, itemDto.name) && Objects.equals(description, itemDto.description);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, price, amount);
-    }
 }
