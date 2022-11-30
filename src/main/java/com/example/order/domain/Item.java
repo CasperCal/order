@@ -4,10 +4,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Item {
-    private final String id;
-    private final String name;
-    private final String description;
-    private final double price;
+    private String id;
+    private String name;
+    private String description;
+    private double price;
     private int amount;
 
     public Item(String name, String description, double price, int amount) {
@@ -24,6 +24,14 @@ public class Item {
         this.description = description;
         this.price = price;
         this.amount = amount;
+    }
+
+    public Item(){
+        id = "we should never get here";
+        name = "i dont understand jack shit if i ever get here tbh";
+        description = "what a crazy world we live in";
+        price = 0;
+        amount = 0;
     }
 
     public void setAmountDelta(int amount) {

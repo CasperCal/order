@@ -3,6 +3,7 @@ package com.example.order.domain;
 import com.example.order.domain.repos.UserRepo;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -10,7 +11,7 @@ import java.util.UUID;
 public class Order {
     private final String orderId;
     private final String customerId;
-    private final Map<String, OrderedItem> itemGroup;
+    private Map<String, OrderedItem> itemGroup = new HashMap<>();
     private final double price;
 
     public Order(String customerId, Map<String, OrderedItem> itemGroup) {
@@ -33,7 +34,7 @@ public class Order {
     }
 
     public Map<String, OrderedItem> getItemGroup() {
-        return itemGroup;
+        return this.itemGroup;
     }
     public double calculatePrice(){
         double totalPrice = 0;
@@ -41,5 +42,15 @@ public class Order {
             totalPrice += item.getPrice() * item.getAmount();
         }
         return totalPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId='" + orderId + '\'' +
+                ", customerId='" + customerId + '\'' +
+                ", itemGroup=" + itemGroup +
+                ", price=" + price +
+                '}';
     }
 }
