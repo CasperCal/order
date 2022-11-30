@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path="orders")
 public class OrderController {
@@ -31,6 +33,19 @@ public class OrderController {
     public OrderDto checkoutShoppingList(@RequestHeader String authorization) {
         securityService.validateAuthorisation(authorization, Feature.ORDER_ITEM);
         return orderService.order(authorization);
+    }
+    @GetMapping(path = "history", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrderDto> viewOrderHistory(@RequestHeader String authorization) {
+        securityService.validateAuthorisation(authorization, Feature.VIEW_ORDERS);
+        return orderService.orderOverView(authorization);
+    }
+
+    @PostMapping(path = "repeat/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDto repeatOrder(@RequestHeader String authorization, @PathVariable String id) {
+        securityService.validateAuthorisation(authorization, Feature.REORDER);
+        return orderService.repeatOrder(authorization, id);
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.order.services;
 
 import com.example.order.api.dtos.ItemDto;
 import com.example.order.api.dtos.OrderDto;
+import com.example.order.api.dtos.OrderedItemDto;
 import com.example.order.domain.Order;
 import com.example.order.domain.OrderedItem;
 import com.example.order.domain.User;
@@ -14,6 +15,7 @@ import com.example.order.services.mappers.UserMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -56,6 +58,21 @@ public class OrderService {
                 item.lateShipping();
             }
         }
+    }
+
+    public List<OrderDto> orderOverView(String authorization) {
+        User currentUser = getUserByAuthorization(authorization);
+        List<Order> customerOrderList = orderRepo.getAllOrders().stream().filter((order) -> (order.getCustomerId()).equals(currentUser.getId()))
+                .toList();
+        return orderMapper.toDto(customerOrderList);
+    }
+
+    public OrderDto repeatOrder(String authorization, String orderId) {
+        OrderDto pastOrder = orderOverView(authorization).stream().filter((order) -> order.id().equals(orderId))
+                .findFirst().orElseThrow(()->new NoSuchElementException("Order ID not in history."));
+        Order newOrder = new Order(pastOrder.customerId(), pastOrder.orderMap());
+        checkStock(newOrder.getItemGroup());
+        return orderMapper.toDto(orderRepo.save(newOrder));
     }
 
     private User getUserByAuthorization(String authorization) {
