@@ -29,7 +29,7 @@ public class UserRepo {
             if (user.getMailAddress().equals(user1.getValue().getMailAddress())) {throw new IllegalArgumentException("E-Mail address already registered.");}
         }
         userMap.put(user.getId(), user);
-        myLogger.info(user.getMailAddress() + "Has created an account.");
+        myLogger.info(user.getMailAddress() + " has created an account.");
         return user;
     }
 

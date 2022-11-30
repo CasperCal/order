@@ -24,6 +24,7 @@ public class ItemControllerTests {
     @DisplayName("adding item tests")
     @Nested
     class AddItemTests{
+        //need to add: test duplicate item, wrong auth,
         @Test
         void createItem_asAdminWithCorrectBody_ReturnsCorrectItemDto(){
             JSONObject requestParams = new JSONObject();

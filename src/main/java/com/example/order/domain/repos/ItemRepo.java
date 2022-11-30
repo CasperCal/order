@@ -31,7 +31,7 @@ public class ItemRepo {
 
         }
         itemMap.put(item.getId(), item);
-        myLogger.info(item.getName() + "has been created as an item with ID: " + item.getId());
+        myLogger.info(item.getName() + " has been created as an item with ID: " + item.getId());
         return item;
     }
 
