@@ -22,6 +22,7 @@ public class ItemRepo {
         itemMap.put("1", new Item("1", "testItem1", "an item for tests", 0.5, 100));
         itemMap.put("2", new Item("2", "testItem2", "another item for tests", 12, 50));
         itemMap.put("3", new Item("3", "testItem3", "another other  item for tests", 1000, 0));
+        myLogger.info("repo init finished");
     }
 
     public Item save(Item item) throws IllegalArgumentException {

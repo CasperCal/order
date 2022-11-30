@@ -3,6 +3,7 @@ package com.example.order.api;
 
 import com.example.order.api.dtos.ItemDto;
 import com.example.order.domain.exceptions.UnknownUserException;
+import com.example.order.domain.repos.ItemRepo;
 import com.example.order.domain.repos.OrderRepo;
 import com.example.order.domain.repos.UserRepo;
 import com.example.order.services.mappers.ItemMapper;
@@ -30,19 +31,21 @@ public class OrderControllerTest {
     @Autowired
     private UserRepo userRepo;
     @Autowired
+    private ItemRepo itemRepo;
+    @Autowired
     private ItemMapper itemMapper;
 
     @DisplayName("test regarding adding ordered items to shoppingList")
     @Nested
     class orderedItemTests {
         @Test
-        void givenAuthUser_AddingItemToShoppingList_thenItemisInList(){
+        void givenAuthUser_AddingItemToShoppingList_thenItemIsInList(){
             ItemDto result = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
                     .log().all().contentType("application/json")
                     .with().queryParam("itemId","1")
                     .queryParam("amount", 1)
-                    .when().post("/order/add")
-                    .then().statusCode(200).and().extract().body().as(ItemDto.class);
+                    .when().post("/orders/add")
+                    .then().statusCode(201).and().extract().body().as(ItemDto.class);
             List<ItemDto> resultAsList = new ArrayList<>();
             resultAsList.add(result);
             assertEquals(itemMapper.toDto(userRepo.getUserByEmail("casper@test.code").orElseThrow(UnknownUserException::new).getShoppingList())
