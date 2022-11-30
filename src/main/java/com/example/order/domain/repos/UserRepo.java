@@ -44,4 +44,8 @@ public class UserRepo {
     }
 
     public List<User> getAllUsers() {return userMap.values().stream().toList();}
+
+    public Map<String, User> getUserMap() {
+        return userMap;
+    }
 }
