@@ -5,12 +5,15 @@ import com.example.order.domain.repos.UserRepo;
 import com.example.order.domain.security.Role;
 import com.example.order.services.mappers.UserMapper;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -68,10 +71,17 @@ public class UserControllerTests {
         @Test
         void getUserByID_withValidIdAsAdmin_returnsCorrectUserDto(){
             UserDto result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "pwd")
-                    //.log().all().contentType("application/json")
                     .when().get("/users/Casper")
                     .then().statusCode(200).and().extract().as(UserDto.class);
             assertEquals(userMapper.toDto(userRepo.getUserMap().get("Casper")), result);
+        }
+        @Test
+        void getAllUsers_withValidIdAsAdmin_returnsCorrectUserDtoList(){
+            List<UserDto> result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "pwd")
+                    .when().get("/users")
+                    .then().statusCode(200).and().extract().as(new TypeRef<List<UserDto>>() {
+                    });
+            assertEquals(userMapper.toDto(userRepo.getAllUsers()), result);
         }
     }
 }

@@ -52,35 +52,6 @@ public class User {
         return this.role.hasFeature(feature);
     }
 
-    public User(String firstName, String lastName, String mailAddress, String phoneNumber, List<Order> orderList, String passWord) {
-        this.role = Role.USER;
-        this.id = UUID.randomUUID().toString();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.mailAddress = mailAddress;
-        this.phoneNumber = phoneNumber;
-        this.passWord = passWord;
-    }
-    public User(String firstName, String lastName, String mailAddress, String phoneNumber, Role role, String passWord) {
-        this.role = role;
-        this.id = UUID.randomUUID().toString();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.mailAddress = mailAddress;
-        this.phoneNumber = phoneNumber;
-        this.passWord = passWord;
-    }
-
-    public User(String firstName, String lastName, String mailAddress, String phoneNumber, List<Order> orderList, Role role, String passWord) {
-        this.role = role;
-        this.id = UUID.randomUUID().toString();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.mailAddress = mailAddress;
-        this.phoneNumber = phoneNumber;
-        this.passWord = passWord;
-    }
-
     public User(String id, String firstName, String lastName, String mailAddress, String phoneNumber, Role role, String passWord) {
         this.id = id;
         this.firstName = firstName;
