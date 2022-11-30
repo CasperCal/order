@@ -1,5 +1,7 @@
 package com.example.order.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -9,7 +11,7 @@ public class Item {
     private String description;
     private double price;
     private int amount;
-
+    @JsonCreator
     public Item(String name, String description, double price, int amount) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
@@ -24,14 +26,6 @@ public class Item {
         this.description = description;
         this.price = price;
         this.amount = amount;
-    }
-
-    public Item(){
-        id = "we should never get here";
-        name = "i dont understand jack shit if i ever get here tbh";
-        description = "what a crazy world we live in";
-        price = 0;
-        amount = 0;
     }
 
     public void setAmountDelta(int amount) {
@@ -64,10 +58,5 @@ public class Item {
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
         return Double.compare(item.price, price) == 0 && Objects.equals(name, item.name) && Objects.equals(description, item.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, price);
     }
 }

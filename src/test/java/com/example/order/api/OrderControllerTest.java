@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,9 +76,27 @@ public class OrderControllerTest {
                     .when().post("/orders/checkout")
                     .then().statusCode(201).and().extract().body().as(OrderDto.class);
             Map<String, OrderedItem> expectedOrderMap = new HashMap<>();
-            expectedOrderMap.put("1", new OrderedItem("testItem1", "an item for tests", 0.5, 100));
+            expectedOrderMap.put("1", new OrderedItem("testItem1", "an item for tests", 0.5, 1));
             assertEquals(new OrderDto(result.id(), "Casper", expectedOrderMap, 0.5),
                         result);
+        }
+        @Test
+        void givenAuthUserWithShoppingListWithSingleItemNotInStock_whenCheckout_ListConvertedToOrders() {
+            RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .with().queryParam("itemId", "2")
+                    .queryParam("amount", 100)
+                    .when().post("/orders/add")
+                    .then().statusCode(201).and().extract().body().as(ItemDto.class);
+            OrderDto result = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .log().all().contentType("application/json")
+                    .when().post("/orders/checkout")
+                    .then().statusCode(201).and().extract().body().as(OrderDto.class);
+            Map<String, OrderedItem> expectedOrderMap = new HashMap<>();
+            OrderedItem expectedOrderItem = new OrderedItem("testItem2", "another item for tests", 12, 100);
+            expectedOrderItem.setDeliveryDate(LocalDate.now().plusDays(7));
+            expectedOrderMap.put("2", expectedOrderItem);
+            assertEquals(new OrderDto(result.id(), "Casper", expectedOrderMap, 1200),
+                    result);
         }
     }
 }

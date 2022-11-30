@@ -43,14 +43,4 @@ public class Order {
         }
         return totalPrice;
     }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "orderId='" + orderId + '\'' +
-                ", customerId='" + customerId + '\'' +
-                ", itemGroup=" + itemGroup +
-                ", price=" + price +
-                '}';
-    }
 }

@@ -63,10 +63,4 @@ public class OrderService {
         String userEmail = decodedToUsernameAndPassword.split(":")[0];
         return userRepo.getUserByEmail(userEmail).orElseThrow(() -> new NoSuchElementException("User not found"));
     }
-
-    public boolean inStock(String itemId, int amount) {
-        if(itemRepo.getItemById(itemId).orElseThrow(() ->new NoSuchElementException("Item not found")).getAmount() < amount)
-            return false;
-        return true;
-    }
 }
