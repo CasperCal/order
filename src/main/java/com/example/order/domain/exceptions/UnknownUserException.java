@@ -2,5 +2,5 @@ package com.example.order.domain.exceptions;
 
 public class UnknownUserException extends RuntimeException{
     public UnknownUserException() {
-        super("Unauthorized");}
+        super("Wrong username or password.");}
 }

@@ -21,9 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class UserControllerTests {
-    //need to test -> registering user -> done
-    //              -> getting list of all users
-    //              -> getting single user
 
     @LocalServerPort
     int port;
@@ -67,23 +64,51 @@ public class UserControllerTests {
             assertEquals("Incorrect user input in field:  last name | mail address |", result.get("message").toString());
         }
     }
+
     @DisplayName("get user or userList tests")
     @Nested
     public class GetUserTests {
         @Test
-        void getUserByID_withValidIdAsAdmin_returnsCorrectUserDto(){
+        void getUserByID_withValidIdAsAdmin_returnsCorrectUserDto() {
             UserDto result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "pwd")
                     .when().get("/users/Casper")
                     .then().statusCode(200).and().extract().as(UserDto.class);
             assertEquals(userMapper.toDto(userRepo.getUserMap().get("Casper")), result);
         }
+
         @Test
-        void getAllUsers_withValidIdAsAdmin_returnsCorrectUserDtoList(){
+        void getAllUsers_withValidIdAsAdmin_returnsCorrectUserDtoList() {
             List<UserDto> result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "pwd")
                     .when().get("/users")
                     .then().statusCode(200).and().extract().as(new TypeRef<List<UserDto>>() {
                     });
             assertEquals(userMapper.toDto(userRepo.getAllUsers()), result);
         }
+
+        //toDO
+        @Test
+        void getAllUsers_withValidIdAsAdminWrongPassWord_throwsError() {
+            JSONObject result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "oogabooga")
+                    .when().get("/users")
+                    .then().statusCode(403).and().extract().as(JSONObject.class);
+            assertEquals("Wrong username or password.", result.get("message").toString());
+        }
+
+        @Test
+        void getAllUsers_withValidIdAsUser_throwsError() {
+            JSONObject result = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .when().get("/users")
+                    .then().statusCode(403).and().extract().as(JSONObject.class);
+            assertEquals("Unauthorized", result.get("message").toString());
+            ;
+        }
     }
+    @Test
+    void getAllUsers_withValidInvalidLogin_throwsError() {
+        JSONObject result = RestAssured.given().port(port).auth().preemptive().basic("oogabooga@test.code", "oogabooga")
+                .when().get("/users")
+                .then().statusCode(403).and().extract().as(JSONObject.class);
+        assertEquals("Wrong username or password.", result.get("message").toString());
+    }
+
 }

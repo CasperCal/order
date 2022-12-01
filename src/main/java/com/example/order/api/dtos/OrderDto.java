@@ -13,9 +13,4 @@ public record OrderDto(String id, String customerId, Map<String, OrderedItem> or
         OrderDto orderDto = (OrderDto) o;
         return Double.compare(orderDto.totalPrice, totalPrice) == 0 && Objects.equals(customerId, orderDto.customerId) && Objects.equals(orderMap, orderDto.orderMap);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(customerId, orderMap, totalPrice);
-    }
 }
