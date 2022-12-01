@@ -42,5 +42,7 @@ public class ItemControllerTests {
             assertEquals(new ItemDto(result.id(),"Unit test item", "an item generated in unit tests",20.4,1)
                         , result);
         }
+
+
     }
 }
