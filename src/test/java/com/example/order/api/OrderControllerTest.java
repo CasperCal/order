@@ -169,10 +169,10 @@ public class OrderControllerTest {
                     .queryParam("amount", 5)
                     .when().post("/orders/add")
                     .then().statusCode(201);
-            RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+            OrderDto orderToCompare = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
                     .log().all().contentType("application/json")
                     .when().post("/orders/checkout")
-                    .then().statusCode(201);
+                    .then().statusCode(201).and().extract().body().as(OrderDto.class);;
             List<OrderDto> result = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
                     .log().all().contentType("application/json")
                     .when().get("/orders/history")
@@ -181,8 +181,14 @@ public class OrderControllerTest {
             assertEquals(result.size(), 2);
             Map<String, OrderedItem> expectedOrderMap = new HashMap<>();
             expectedOrderMap.put("1", new OrderedItem("testItem1", "an item for tests", 0.5, 15));
-            assertEquals(new OrderDto(result.get(1).id(), "Casper", expectedOrderMap, 7.5),
-                    result.get(1));
+            if (result.get(0).id().equals(orderToCompare.id())) {
+                assertEquals(new OrderDto(result.get(0).id(), "Casper", expectedOrderMap, 7.5),
+                        result.get(0));
+            }
+            else {
+                assertEquals(new OrderDto(result.get(1).id(), "Casper", expectedOrderMap, 7.5),
+                        result.get(1));
+            }
         }
 
         @Test
