@@ -2,7 +2,6 @@ package com.example.order.services;
 
 import com.example.order.api.dtos.ItemDto;
 import com.example.order.api.dtos.OrderDto;
-import com.example.order.api.dtos.OrderedItemDto;
 import com.example.order.domain.Order;
 import com.example.order.domain.OrderedItem;
 import com.example.order.domain.User;
@@ -11,7 +10,6 @@ import com.example.order.domain.repos.OrderRepo;
 import com.example.order.domain.repos.UserRepo;
 import com.example.order.services.mappers.ItemMapper;
 import com.example.order.services.mappers.OrderMapper;
-import com.example.order.services.mappers.UserMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
@@ -22,17 +20,14 @@ import java.util.NoSuchElementException;
 @Service
 public class OrderService {
     private final UserRepo userRepo;
-    private final UserMapper userMapper;
     private final ItemRepo itemRepo;
     private final ItemMapper itemMapper;
     private final OrderMapper orderMapper;
     private final OrderRepo orderRepo;
-    private User user;
 
 
-    public OrderService(UserRepo userRepo, UserMapper userMapper, ItemRepo itemRepo, ItemMapper itemMapper, OrderMapper orderMapper, OrderRepo orderRepo) {
+    public OrderService(UserRepo userRepo, ItemRepo itemRepo, ItemMapper itemMapper, OrderMapper orderMapper, OrderRepo orderRepo) {
         this.userRepo = userRepo;
-        this.userMapper = userMapper;
         this.itemRepo = itemRepo;
         this.itemMapper = itemMapper;
         this.orderMapper = orderMapper;

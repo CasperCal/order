@@ -93,7 +93,7 @@ public class UserControllerTests {
             assertEquals(userMapper.toDto(userRepo.getAllUsers()), result);
         }
 
-        //toDO
+
         @Test
         void getAllUsers_withValidIdAsAdminWrongPassWord_throwsError() {
             JSONObject result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "oogabooga")
@@ -108,7 +108,6 @@ public class UserControllerTests {
                     .when().get("/users")
                     .then().statusCode(403).and().extract().as(JSONObject.class);
             assertEquals("Unauthorized", result.get("message").toString());
-            ;
         }
     }
     @Test
