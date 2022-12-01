@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ItemControllerTests {
     @LocalServerPort
     int port;
@@ -44,5 +44,40 @@ public class ItemControllerTests {
         }
 
 
+    }
+
+    @DisplayName("Update item tests")
+    @Nested
+    class UpdateItemTests {
+        @Test
+        void updateItem_CalledOnExistingItemByID_updatesTheItem() {
+            JSONObject requestParams = new JSONObject();
+            requestParams.put("name", "Unit test item");
+            requestParams.put("description", "an item generated in unit tests");
+            requestParams.put("price", 20.4);
+            requestParams.put("amount", 1);
+
+            ItemDto result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code","pwd")
+                    .contentType("application/json").body(requestParams)
+                    .when().put("/items/updateID/1")
+                    .then().statusCode(201).and().extract().as(ItemDto.class);
+            assertEquals(new ItemDto(result.id(),"Unit test item", "an item generated in unit tests",20.4,1)
+                    , result);
+        }
+        @Test
+        void updateItem_CalledOnExistingItemByName_updatesTheItem() {
+            JSONObject requestParams = new JSONObject();
+            requestParams.put("name", "Unit test item");
+            requestParams.put("description", "an item generated in unit tests");
+            requestParams.put("price", 20.4);
+            requestParams.put("amount", 1);
+
+            ItemDto result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code","pwd")
+                    .contentType("application/json").body(requestParams)
+                    .when().put("/items/updateName/testItem1")
+                    .then().statusCode(201).and().extract().as(ItemDto.class);
+            assertEquals(new ItemDto(result.id(),"Unit test item", "an item generated in unit tests",20.4,1)
+                    , result);
+        }
     }
 }
