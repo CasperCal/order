@@ -77,6 +77,14 @@ public class UserControllerTests {
         }
 
         @Test
+        void getUserByID_withInValidIdAsAdmin_returnsCorrectUserDto() {
+            JSONObject result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "pwd")
+                    .when().get("/users/0")
+                    .then().statusCode(404).and().extract().as(JSONObject.class);
+            assertEquals("No User with ID: 0 found in repo.", result.get("message").toString());
+        }
+
+        @Test
         void getAllUsers_withValidIdAsAdmin_returnsCorrectUserDtoList() {
             List<UserDto> result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "pwd")
                     .when().get("/users")
@@ -111,4 +119,11 @@ public class UserControllerTests {
         assertEquals("Wrong username or password.", result.get("message").toString());
     }
 
+    @Test
+    void getAllUsers_withNoneSensePath_throwsError() {
+        JSONObject result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code", "pwd")
+                .when().get("/user")
+                .then().statusCode(404).and().extract().as(JSONObject.class);
+        assertEquals("Not Found", result.get("error").toString());
+    }
 }

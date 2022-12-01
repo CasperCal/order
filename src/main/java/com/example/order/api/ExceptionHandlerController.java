@@ -21,11 +21,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    /*@ExceptionHandler(RuntimeException.class)
     protected void runtimeException(RuntimeException ex, HttpServletResponse response) throws IOException {
 
         response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-    }
+    }*/
 
     @ExceptionHandler(NoSuchElementException.class)
     protected void noSuchElementException(NoSuchElementException ex, HttpServletResponse response) throws IOException {
