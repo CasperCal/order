@@ -79,5 +79,20 @@ public class ItemControllerTests {
             assertEquals(new ItemDto(result.id(),"Unit test item", "an item generated in unit tests",20.4,1)
                     , result);
         }
+
+        @Test
+        void updateItem_CalledOnExistingItemByNameWrongPrice_ThrowsError() {
+            JSONObject requestParams = new JSONObject();
+            requestParams.put("name", "Unit test item");
+            requestParams.put("description", "an item generated in unit tests");
+            requestParams.put("price", -4);
+            requestParams.put("amount", 1);
+
+            JSONObject result = RestAssured.given().port(port).auth().preemptive().basic("admin@test.code","pwd")
+                    .contentType("application/json").body(requestParams)
+                    .when().put("/items/updateName/testItem1")
+                    .then().statusCode(400).and().extract().as(JSONObject.class);
+            assertEquals("price can't be below zero.", result.get("message").toString());
+        }
     }
 }
