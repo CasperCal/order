@@ -140,7 +140,7 @@ public class OrderControllerTest {
                     result);
         }
     }
-    @DisplayName("test regarding getting individual customer history")
+    @DisplayName("test regarding getting individual customer history/reordering")
     @Nested
     class historyTest {
         @Test
@@ -183,6 +183,29 @@ public class OrderControllerTest {
             expectedOrderMap.put("1", new OrderedItem("testItem1", "an item for tests", 0.5, 15));
             assertEquals(new OrderDto(result.get(1).id(), "Casper", expectedOrderMap, 7.5),
                     result.get(1));
+        }
+
+        @Test
+        void givenCustomer_placeOrderAndRepeat_repeatsGivenOrder() {
+            RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .with().queryParam("itemId", "1")
+                    .queryParam("amount", 1)
+                    .when().post("/orders/add")
+                    .then().statusCode(201);
+            RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .with().queryParam("itemId", "2")
+                    .queryParam("amount", 50)
+                    .when().post("/orders/add")
+                    .then().statusCode(201);
+            OrderDto firstOrder = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .log().all().contentType("application/json")
+                    .when().post("/orders/checkout")
+                    .then().statusCode(201).and().extract().body().as(OrderDto.class);
+            OrderDto repeatOrder = RestAssured.given().port(port).auth().preemptive().basic("casper@test.code", "pwd")
+                    .log().all().contentType("application/json")
+                    .when().post("/orders/repeat/" + firstOrder.id())
+                    .then().statusCode(201).and().extract().body().as(OrderDto.class);
+            assertEquals(firstOrder, repeatOrder);
         }
     }
 }
